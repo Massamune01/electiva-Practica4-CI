@@ -22,7 +22,7 @@ jobs:
 
       - name: Run tests
         run: |
-          ./vendor/bin/phpunit
+          ./vendor/bin/phpunit tests
 
       - name: Send notification (success)
         if: success()
