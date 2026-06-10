@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../src/hola.php';
+require_once __DIR__ . '/../src/Hola.php';
 
 class HolaTest extends TestCase {
 
