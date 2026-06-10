@@ -1,3 +1,5 @@
 <?php
 
-echo "Holaaa!";
+function hola() {
+    return "Hola mundo";
+}

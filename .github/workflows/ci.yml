@@ -1,16 +1,39 @@
-name: CI Notification
+name: PHP CI + Notification
 
 on:
   push:
 
 jobs:
-  notify:
+  test-and-notify:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send notification to ntfy
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Install dependencies (PHPUnit)
+        run: |
+          composer require --dev phpunit/phpunit
+
+      - name: Run tests
+        run: |
+          ./vendor/bin/phpunit
+
+      - name: Send notification (success)
+        if: success()
         run: |
           curl -X POST https://ntfy.sh/devops-itla \
-          -H "Title: Nuevo push en el repositorio" \
-          -H "Priority: default" \
-          -d "Se ha realizado un push en el repositorio ${{ github.repository }} por ${{ github.actor }} en la rama ${{ github.ref_name }}"
+          -H "Title: ✅ Tests OK" \
+          -d "Los tests pasaron en ${{ github.repository }} (rama: ${{ github.ref_name }})"
+
+      - name: Send notification (failure)
+        if: failure()
+        run: |
+          curl -X POST https://ntfy.sh/devops-itla \
+          -H "Title: ❌ Tests FALLARON" \
+          -d "Error en tests en ${{ github.repository }} (rama: ${{ github.ref_name }})"
