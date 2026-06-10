@@ -1,0 +1,16 @@
+name: CI Notification
+
+on:
+  push:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send notification to ntfy
+        run: |
+          curl -X POST https://ntfy.sh/devops-itla \
+          -H "Title: Nuevo push en el repositorio" \
+          -H "Priority: default" \
+          -d "Se ha realizado un push en el repositorio ${{ github.repository }} por ${{ github.actor }} en la rama ${{ github.ref_name }}"
